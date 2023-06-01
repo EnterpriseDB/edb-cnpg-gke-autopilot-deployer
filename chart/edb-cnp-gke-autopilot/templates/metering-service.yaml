@@ -1,0 +1,15 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-metering-service
+spec:
+  type: {{ .Values.metering.service.type }}
+  ports:
+    - port: {{ .Values.metering.service.port }}
+      targetPort: metrics
+      name: metrics
+  selector:
+    {{- with .Values.metering.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}

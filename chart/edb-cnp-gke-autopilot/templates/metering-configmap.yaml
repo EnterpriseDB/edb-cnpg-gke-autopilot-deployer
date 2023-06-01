@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-{{ .Values.metering.stateConfigMapName }}
+data:
+  lastReportedSuccess: ""
+  failuresSinceLastSuccess: ""

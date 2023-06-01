@@ -1,0 +1,45 @@
+apiVersion: app.k8s.io/v1beta1
+kind: Application
+metadata:
+  name: "{{ .Release.Name }}"
+  namespace: "{{ .Release.Namespace }}"
+  labels:
+    app.kubernetes.io/name: "{{ .Release.Name }}"
+  annotations:
+    marketplace.cloud.google.com/deploy-info: '{{ .Files.Get "configuration/deploy_info.json" | fromJson | toJson }}'
+    kubernetes-engine.cloud.google.com/icon: '{{ print "data:image/png;base64," (.Files.Get "configuration/icon_200px.png" | b64enc) }}'
+spec:
+  descriptor:
+    type: CloudNativePG
+    version: '1.20.0'
+    description: |-
+    {{- .Files.Get "configuration/description.md" | nindent 6 }}
+    maintainers:
+      - name: EDB
+        url: https://www.enterprisedb.com/
+    links:
+      - description: 'User Guide: EDB CloudNativePG'
+        url: https://cloudnative-pg.io/docs/
+      - description: 'Official website for CloudNativePG'
+        url: https://cloudnative-pg.io/
+    notes: |-
+      {{- .Files.Get "configuration/notes.md" | nindent 6 }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: "{{ .Release.Name }}"
+  addOwnerRef: true
+  componentKinds:
+    - group: apiextensions.k8s.io/v1
+      kind: CustomResourceDefinition
+    - group: admissionregistration.k8s.io/v1
+      kind: ValidatingWebhookConfiguration
+    - group: admissionregistration.k8s.io/v1
+      kind: MutatingWebhookConfiguration
+    - group: v1
+      kind: Secret
+    - group: v1
+      kind: ConfigMap
+    - group: v1
+      kind: Service
+    - group: apps
+      kind: Deployment
