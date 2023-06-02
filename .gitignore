@@ -3,3 +3,4 @@ mpdev_parameters.json
 .idea
 *.tgz
 .DS_Store
+cluster-example.yaml
