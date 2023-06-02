@@ -15,13 +15,15 @@ metering:
     image: "metering_image_repo:latest"
     pullPolicy: IfNotPresent
   reporting:
-    metricName: "count"
+    metricName: "edb_usage_1"
+    serviceName: "edb-postgresql.endpoints.public-edb-ppas.cloud.goog"
     scheme: "http"
     host: "localhost"
     port: "4567"
     path: "/report"
     status: "/status"
     interval: "1m"
+    unit: "1h"
   stateConfigMapName: "metering-state"
   ubbImage:
     image: "gcr.io/cloud-marketplace-tools/metering/ubbagent:latest"

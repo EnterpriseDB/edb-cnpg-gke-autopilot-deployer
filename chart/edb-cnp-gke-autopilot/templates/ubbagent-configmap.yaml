@@ -17,7 +17,7 @@ data:
     # Metric names should match verbatim the identifiers created
     # during pricing setup.
     metrics:
-      - name: edb_usage_1
+      - name: {{ .Values.metering.reporting.metricName | quote }}
         type: double
 
         # The endpoints section of a metric defines which endpoints the
@@ -44,5 +44,5 @@ data:
           identity: gcp
           # The service name is unique to your application and will be
           # provided during onboarding.
-          serviceName: "edb-postgresql.endpoints.public-edb-ppas.cloud.goog"
+          serviceName: {{ .Values.metering.reporting.serviceName | quote }}
           consumerId: $AGENT_CONSUMER_ID  # From the reporting secret.

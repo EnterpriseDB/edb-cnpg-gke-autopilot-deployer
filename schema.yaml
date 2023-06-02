@@ -6,7 +6,7 @@ x-google-marketplace:
   publishedVersion: "$TAG"
   publishedVersionMetadata:
     releaseNote: >-
-      TODO Initial release
+      Initial private listing
     releaseTypes:
       - Feature
     recommended: false
@@ -32,7 +32,9 @@ x-google-marketplace:
           type: REQUIRE_ONE_NODE_PER_REPLICA
     k8sVersion: ">=1.24.0"
   deployerServiceAccount:
-    description: "TODO CREATES STUFF"
+    description: >- 
+      The deployer service account creates a CustomResourceDefinition for its operator. This custom resource is used to manage the PostgreSQL instances.
+      The deployer also creates webhooks to provide validation and defaults for the resources it manages.
     roles:
       - type: ClusterRole
         rulesType: CUSTOM
@@ -74,7 +76,8 @@ properties:
     x-google-marketplace:
       type: SERVICE_ACCOUNT
       serviceAccount:
-        description: "TODO WATCHES THINGS"
+        description: >-
+          The metering deployment watches pods and cluster resources in order to measure and bill for the appropriate usage. The pods may reside in arbitrary namespaces, requiring a ClusterRole to be used.
         roles:
           - type: ClusterRole
             rulesType: PREDEFINED
@@ -113,7 +116,7 @@ properties:
                   - get
                   - list
                   - watch
-  clou        dnative-pg.replicas:
+  cloudnative-pg.replicas:
     type: integer
     default: 1
   cloudnative-pg.serviceAccount.name:
@@ -121,7 +124,8 @@ properties:
     x-google-marketplace:
       type: SERVICE_ACCOUNT
       serviceAccount:
-        description: "TODO WATCHES THINGS"
+        description: >-
+          The operator is based on a Cluster CustomResource. This operator automatically creates pods and the associated resources to create and manage database instances. These database instances can have arbitrary names and reside in arbitrary namespaces, requiring a ClusterRole for the operator to use.
         roles:
         - type: ClusterRole
           rulesType: CUSTOM

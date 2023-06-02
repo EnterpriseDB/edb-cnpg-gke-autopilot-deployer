@@ -41,6 +41,10 @@ spec:
               value: {{ .Values.metering.reporting.status | quote }}
             - name: UBB_INTERVAL
               value: {{ .Values.metering.reporting.interval | quote }}
+            - name: UBB_METRIC_NAME
+              value: {{ .Values.metering.reporting.metricName | quote }}
+            - name: UBB_UNIT
+              value: {{ .Values.metering.reporting.unit | quote }}
             - name: STATE_CONFIGMAP
               value: {{ .Release.Name }}-{{ .Values.metering.stateConfigMapName }}
           image: "{{ .Values.metering.image.image }}"
@@ -62,16 +66,13 @@ spec:
 {{/*            initialDelaySeconds: {{ .Values.metering.http.readinessProbe.initialDelaySeconds }}*/}}
 {{/*          {{- end }}*/}}
           ports:
-            - containerPort: {{ .Values.metering.reportingPort }}
+            - containerPort: {{ .Values.metering.reporting.port }}
               name: metrics
               protocol: TCP
           resources:
-            {{- toYaml .Values.resources | nindent 12 }}
+            {{- toYaml .Values.metering.resources | nindent 12 }}
           securityContext:
           {{- toYaml .Values.metering.containerSecurityContext | nindent 12 }}
-          volumeMounts:
-            - name: metering-state
-              mountPath: {{ .Values.metering.stateMountPath }}
         - name: ubbagent
           image: "{{ .Values.metering.ubbImage.image }}"
           imagePullPolicy: {{ .Values.metering.ubbImage.pullPolicy }}
@@ -79,7 +80,7 @@ spec:
             - name: AGENT_CONFIG_FILE
               value: "/etc/ubbagent/config.yaml"
             - name: AGENT_LOCAL_PORT
-              value: {{ .Values.metering.reportingPort | quote }}
+              value: {{ .Values.metering.reporting.port | quote }}
             - name: AGENT_ENCODED_KEY
               valueFrom:
                 secretKeyRef:

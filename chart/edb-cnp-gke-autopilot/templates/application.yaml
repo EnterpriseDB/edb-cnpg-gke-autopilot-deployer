@@ -11,7 +11,7 @@ metadata:
 spec:
   descriptor:
     type: CloudNativePG
-    version: '1.20.0'
+    version: {{ index .Values "cloudnative-pg" "image" "tag" | quote}}
     description: |-
     {{- .Files.Get "configuration/description.md" | nindent 6 }}
     maintainers:
