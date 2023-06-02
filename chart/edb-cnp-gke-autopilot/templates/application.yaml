@@ -18,10 +18,7 @@ spec:
       - name: EDB
         url: https://www.enterprisedb.com/
     links:
-      - description: 'User Guide: EDB CloudNativePG'
-        url: https://cloudnative-pg.io/docs/
-      - description: 'Official website for CloudNativePG'
-        url: https://cloudnative-pg.io/
+      {{- .Files.Get "configuration/links.yaml" | nindent 6 }}
     notes: |-
       {{- .Files.Get "configuration/notes.md" | nindent 6 }}
   selector:

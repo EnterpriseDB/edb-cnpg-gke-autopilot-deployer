@@ -1,0 +1,4 @@
+- description: 'PostgreSQL documentation'
+  url: https://www.enterprisedb.com/docs/supported-open-source/postgresql/
+- description: 'CloudNativePG documentation'
+  url: https://www.enterprisedb.com/docs/supported-open-source/cloud_native_pg/
