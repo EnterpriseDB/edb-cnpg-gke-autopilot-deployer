@@ -1,0 +1,70 @@
+name: continuous-delivery
+on:
+  push:
+    tags:
+      - '*'
+    workflow_dispatch:
+      inputs:
+        tag:
+          description: "What to tag the deployer image with"
+          required: true
+        cnpg_tag:
+          description: "What version of the CNPG chart to bundle"
+          required: true
+jobs:
+  build:
+    name: Build chart
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+#      - name: Login to GCR
+#        uses: docker/login-action@v2
+#        with:
+#          registry: gcr.io
+#          username: _json_key
+#          password: ${{ secrets.GCR_JSON_KEY }}
+      - name: Install Helm
+        uses: azure/setup-helm@v3
+        with:
+          id: install
+
+      # Steps to run on tag
+      - name: Parse major, minor, patch from tag
+        id: semver_parser
+        uses: booxmedialtd/ws-action-parse-semver@v1
+        if: ${{ github.ref_type == 'tag' }}
+        with:
+          input_string: ${{ github.ref }}
+          version_extractor_regex: '^[v]?([0-9]+\.[0-9]+\.[0-9]).*$'
+      - name: Update CNPG chart by tag
+        run: make update-chart
+        if: ${{ github.ref_type == 'tag' }}
+        env:
+          TAG: "${{ steps.semver_parser.outputs.major }}.${{ steps.semver_parser.outputs.minor }}.${{ steps.semver_parser.outputs.patch }}"
+      - name: Build deployer image by tag
+        if: ${{ github.ref_type == 'tag' }}
+        run: make build
+        env:
+          TAG: ${{ github.ref_name }}
+      # TODO PUSH
+      #####
+
+      # Steps to run on dispatch
+      - name: Update CNPG chart by input
+        run: make update-chart
+        if: ${{ github.event_name == 'workflow_dispatch' }}
+        env:
+          TAG: ${{ inputs.cnpg_tag }}
+      - name: Build deployer image by input
+        if: ${{ github.event_name == 'workflow_dispatch' }}
+        run: make build
+        env:
+          TAG: ${{ inputs.tag }}
+      # TODO PUSH
