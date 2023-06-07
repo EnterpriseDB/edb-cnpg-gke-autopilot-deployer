@@ -17,7 +17,7 @@ Google Kubernetes Engine cluster using Google Cloud Marketplace. Follow the
 
 [//]: # (TODO get the right URL)
 
-## Command-line instructions
+## Manual installation instructions
 
 ### Prerequisites
 
@@ -113,7 +113,7 @@ cd edb-cnp-gke-autopilot-deployer
 
 Choose an instance name and
 [namespace](https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/)
-for the app. By default, EDB Community 360 PostgreSQL uses the `cnpg-system` namespace, but in most cases, you can use the 
+for the app. By convention, EDB Community 360 PostgreSQL uses the `cnpg-system` namespace, but in most cases, you can use the 
 `default` namespace.
 
 ```shell

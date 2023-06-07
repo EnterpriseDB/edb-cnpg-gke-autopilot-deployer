@@ -10,7 +10,7 @@ metadata:
     kubernetes-engine.cloud.google.com/icon: '{{ print "data:image/png;base64," (.Files.Get "configuration/icon_200px.png" | b64enc) }}'
 spec:
   descriptor:
-    type: CloudNativePG
+    type: EDB Community 360 PostgreSQL
     version: {{ index .Values "cloudnative-pg" "image" "tag" | quote}}
     description: |-
     {{- .Files.Get "configuration/description.md" | nindent 6 }}
