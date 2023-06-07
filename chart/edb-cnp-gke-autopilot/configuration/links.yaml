@@ -1,4 +1,8 @@
-- description: 'PostgreSQL documentation'
+- description: 'PostgreSQL'
   url: https://www.enterprisedb.com/docs/supported-open-source/postgresql/
-- description: 'CloudNativePG documentation'
+- description: 'CloudNativePG'
   url: https://www.enterprisedb.com/docs/supported-open-source/cloud_native_pg/
+- description: 'PostgreSQL Manuals'
+  url: https://www.postgresql.org/docs/
+- description: 'PostgreSQL Installers'
+  url: https://www.enterprisedb.com/docs/supported-open-source/postgresql/installer/
