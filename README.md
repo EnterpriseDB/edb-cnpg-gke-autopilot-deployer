@@ -48,15 +48,15 @@ This license key is a Google Marketplace License that enables the pay as you go 
 
 See the following screenshot for an example
 
-![Purchase EDB Community 360 PostgreSQL](images/license-1.png)
+![Purchase EDB Community 360 PostgreSQL](TODO)
 
 #### Generate a license file for the GCP project for billing
 
 Click the “Generate license key” button to generate the license key.  It will automatically be downloaded onto your computer.
 
-![Get License file for EDB Community 360 PostgreSQL(images/license-2.png)
+![Get License file for EDB Community 360 PostgreSQL](TODO)
 
-Save the license key file preferably as ```license-key.yaml```.
+Save the license key file preferably as `license-key.yaml`.
 
 #### Create a Google Kubernetes Engine (GKE) cluster
 
@@ -146,7 +146,7 @@ kubectl apply -f license.yaml
 #### Set up the image tag:
 
 It is advised to use stable image reference which you can find on
-[Marketplace Container Registry](https://marketplace.gcr.io/google/jaeger-operator).
+[Marketplace Container Registry](https://marketplace.gcr.io/foo/bar).
 
 [//]: # (TODO get the right URL)
 
