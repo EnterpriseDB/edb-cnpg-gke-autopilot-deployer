@@ -97,19 +97,10 @@ spec:
                 secretKeyRef:
                   name: {{ .Values.metering.reportingSecret }}
                   key: consumer-id
-          readinessProbe:
-            httpGet:
-              path: {{ .Values.metering.reporting.status }}
-              port: {{ .Values.metering.reporting.port }}
-              scheme: HTTP
-          livenessProbe:
-            httpGet:
-              path: {{ .Values.metering.reporting.status }}
-              port: {{ .Values.metering.reporting.port }}
-              scheme: HTTP
-          {{- if .Values.metering.http.livenessProbe.initialDelaySeconds }}
-            initialDelaySeconds: {{ .Values.metering.http.livenessProbe.initialDelaySeconds }}
-          {{- end }}
+          ports:
+            - containerPort: {{ .Values.metering.reporting.port }}
+              name: status
+              protocol: TCP
           volumeMounts:
             - name: ubbagent-config
               mountPath: /etc/ubbagent

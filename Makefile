@@ -81,6 +81,6 @@ install-prod: ## Install the deployer image via mpdev
 		--parameters='{"name": "edb-cnp-gke-autopilot-test","namespace": "cnpg-system","metering.reportingSecret": "fake-reporting-secret"}'
 
 .PHONY: verify-install
-verify-install:
+verify-install: ## Run the Marketplace verifier
 	mpdev /scripts/verify \
 		  --deployer=${REGISTRY}/${APP_NAME_DEV}/deployer:${TAG}
