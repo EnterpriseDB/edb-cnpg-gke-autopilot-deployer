@@ -38,9 +38,12 @@ metering:
     seccompProfile:
       type: RuntimeDefault
   http:
+    port: 5678
     readinessProbe:
+      path: /readyz
       initialDelaySeconds: 15
     livenessProbe:
+      path: /healthz
       initialDelaySeconds: 15
   service:
     type: ClusterIP

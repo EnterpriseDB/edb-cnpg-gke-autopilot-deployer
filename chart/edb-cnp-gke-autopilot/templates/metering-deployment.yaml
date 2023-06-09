@@ -45,28 +45,34 @@ spec:
               value: {{ .Values.metering.reporting.metricName | quote }}
             - name: UBB_UNIT
               value: {{ .Values.metering.reporting.unit | quote }}
+            - name: PROBE_PORT
+              value: {{ .Values.metering.http.port | quote }}
+            - name: LIVENESS_PROBE_PATH
+              value: {{ .Values.metering.http.livenessProbe.path | quote }}
+            - name: READINESS_PROBE_PATH
+              value: {{ .Values.metering.http.readinessProbe.path | quote }}
             - name: STATE_CONFIGMAP
               value: {{ .Release.Name }}-{{ .Values.metering.stateConfigMapName }}
           image: "{{ .Values.metering.image.image }}"
           imagePullPolicy: {{ .Values.metering.image.pullPolicy }}
-{{/*          livenessProbe:*/}}
-{{/*            httpGet:*/}}
-{{/*              path: /healthz*/}}
-{{/*              port: {{ .Values.metering.reportingPort }}*/}}
-{{/*              scheme: HTTP*/}}
-{{/*          {{- if .Values.metering.http.livenessProbe.initialDelaySeconds }}*/}}
-{{/*            initialDelaySeconds: {{ .Values.metering.http.livenessProbe.initialDelaySeconds }}*/}}
-{{/*          {{- end }}*/}}
-{{/*          readinessProbe:*/}}
-{{/*            httpGet:*/}}
-{{/*              path: /readyz*/}}
-{{/*              port: {{ .Values.metering.reportingPort }}*/}}
-{{/*              scheme: HTTPS*/}}
-{{/*          {{- if .Values.metering.http.readinessProbe.initialDelaySeconds }}*/}}
-{{/*            initialDelaySeconds: {{ .Values.metering.http.readinessProbe.initialDelaySeconds }}*/}}
-{{/*          {{- end }}*/}}
+          livenessProbe:
+            httpGet:
+              path: {{ .Values.metering.http.livenessProbe.path }}
+              port: {{ .Values.metering.http.port }}
+              scheme: HTTP
+          {{- if .Values.metering.http.livenessProbe.initialDelaySeconds }}
+            initialDelaySeconds: {{ .Values.metering.http.livenessProbe.initialDelaySeconds }}
+          {{- end }}
+          readinessProbe:
+            httpGet:
+              path: {{ .Values.metering.http.readinessProbe.path }}
+              port: {{ .Values.metering.http.port }}
+              scheme: HTTP
+          {{- if .Values.metering.http.readinessProbe.initialDelaySeconds }}
+            initialDelaySeconds: {{ .Values.metering.http.readinessProbe.initialDelaySeconds }}
+          {{- end }}
           ports:
-            - containerPort: {{ .Values.metering.reporting.port }}
+            - containerPort: {{ .Values.metering.http.port }}
               name: metrics
               protocol: TCP
           resources:
@@ -91,14 +97,19 @@ spec:
                 secretKeyRef:
                   name: {{ .Values.metering.reportingSecret }}
                   key: consumer-id
-{{/*          livenessProbe:*/}}
-{{/*            httpGet:*/}}
-{{/*              path: /status*/}}
-{{/*              port: {{ .Values.metering.reportingPort }}*/}}
-{{/*              scheme: HTTP*/}}
-{{/*          {{- if .Values.metering.http.livenessProbe.initialDelaySeconds }}*/}}
-{{/*            initialDelaySeconds: {{ .Values.metering.http.livenessProbe.initialDelaySeconds }}*/}}
-{{/*          {{- end }}*/}}
+          readinessProbe:
+            httpGet:
+              path: {{ .Values.metering.reporting.status }}
+              port: {{ .Values.metering.reporting.port }}
+              scheme: HTTP
+          livenessProbe:
+            httpGet:
+              path: {{ .Values.metering.reporting.status }}
+              port: {{ .Values.metering.reporting.port }}
+              scheme: HTTP
+          {{- if .Values.metering.http.livenessProbe.initialDelaySeconds }}
+            initialDelaySeconds: {{ .Values.metering.http.livenessProbe.initialDelaySeconds }}
+          {{- end }}
           volumeMounts:
             - name: ubbagent-config
               mountPath: /etc/ubbagent
