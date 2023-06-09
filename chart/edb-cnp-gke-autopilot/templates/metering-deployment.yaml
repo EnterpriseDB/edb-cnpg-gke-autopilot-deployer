@@ -1,0 +1,122 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-metering
+  labels:
+    {{- with .Values.metering.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+        {{- with .Values.metering.labels }}
+        {{- toYaml . | nindent 6 }}
+        {{- end }}
+  template:
+    metadata:
+      labels:
+        {{- with .Values.metering.labels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      containers:
+        - name: metering
+          command:
+            - /metering
+          env:
+            - name: NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: UBB_SCHEME
+              value: {{ .Values.metering.reporting.scheme | quote }}
+            - name: UBB_HOST
+              value: {{ .Values.metering.reporting.host | quote }}
+            - name: UBB_PORT
+              value: {{ .Values.metering.reporting.port | quote }}
+            - name: UBB_PATH
+              value: {{ .Values.metering.reporting.path | quote }}
+            - name: UBB_STATUS_PATH
+              value: {{ .Values.metering.reporting.status | quote }}
+            - name: UBB_INTERVAL
+              value: {{ .Values.metering.reporting.interval | quote }}
+            - name: UBB_METRIC_NAME
+              value: {{ .Values.metering.reporting.metricName | quote }}
+            - name: UBB_UNIT
+              value: {{ .Values.metering.reporting.unit | quote }}
+            - name: PROBE_PORT
+              value: {{ .Values.metering.http.port | quote }}
+            - name: LIVENESS_PROBE_PATH
+              value: {{ .Values.metering.http.livenessProbe.path | quote }}
+            - name: READINESS_PROBE_PATH
+              value: {{ .Values.metering.http.readinessProbe.path | quote }}
+            - name: STATE_CONFIGMAP
+              value: {{ .Release.Name }}-{{ .Values.metering.stateConfigMapName }}
+          image: "{{ .Values.metering.image.image }}"
+          imagePullPolicy: {{ .Values.metering.image.pullPolicy }}
+          livenessProbe:
+            httpGet:
+              path: {{ .Values.metering.http.livenessProbe.path }}
+              port: {{ .Values.metering.http.port }}
+              scheme: HTTP
+          {{- if .Values.metering.http.livenessProbe.initialDelaySeconds }}
+            initialDelaySeconds: {{ .Values.metering.http.livenessProbe.initialDelaySeconds }}
+          {{- end }}
+          readinessProbe:
+            httpGet:
+              path: {{ .Values.metering.http.readinessProbe.path }}
+              port: {{ .Values.metering.http.port }}
+              scheme: HTTP
+          {{- if .Values.metering.http.readinessProbe.initialDelaySeconds }}
+            initialDelaySeconds: {{ .Values.metering.http.readinessProbe.initialDelaySeconds }}
+          {{- end }}
+          ports:
+            - containerPort: {{ .Values.metering.http.port }}
+              name: metrics
+              protocol: TCP
+          resources:
+            {{- toYaml .Values.metering.resources | nindent 12 }}
+          securityContext:
+          {{- toYaml .Values.metering.containerSecurityContext | nindent 12 }}
+        - name: ubbagent
+          image: "{{ .Values.metering.ubbImage.image }}"
+          imagePullPolicy: {{ .Values.metering.ubbImage.pullPolicy }}
+          env:
+            - name: AGENT_CONFIG_FILE
+              value: "/etc/ubbagent/config.yaml"
+            - name: AGENT_LOCAL_PORT
+              value: {{ .Values.metering.reporting.port | quote }}
+            - name: AGENT_ENCODED_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.metering.reportingSecret }}
+                  key: reporting-key
+            - name: AGENT_CONSUMER_ID
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.metering.reportingSecret }}
+                  key: consumer-id
+          readinessProbe:
+            httpGet:
+              path: {{ .Values.metering.reporting.status }}
+              port: {{ .Values.metering.reporting.port }}
+              scheme: HTTP
+          livenessProbe:
+            httpGet:
+              path: {{ .Values.metering.reporting.status }}
+              port: {{ .Values.metering.reporting.port }}
+              scheme: HTTP
+          {{- if .Values.metering.http.livenessProbe.initialDelaySeconds }}
+            initialDelaySeconds: {{ .Values.metering.http.livenessProbe.initialDelaySeconds }}
+          {{- end }}
+          volumeMounts:
+            - name: ubbagent-config
+              mountPath: /etc/ubbagent
+      volumes:
+        - name: ubbagent-config
+          configMap:
+            name: {{ .Release.Name }}-ubbagent-config
+      securityContext:
+        {{- toYaml .Values.metering.podSecurityContext | nindent 8 }}
+      serviceAccountName: {{ .Values.metering.serviceAccountName }}

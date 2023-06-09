@@ -1,0 +1,6 @@
+fake_reporting_secret.yaml
+mpdev_parameters.json
+.idea
+*.tgz
+.DS_Store
+cluster-example.yaml

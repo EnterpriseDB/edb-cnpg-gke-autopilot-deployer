@@ -1,0 +1,3 @@
+engine: gotpl
+name: edb-cnp-gke-autopilot
+version: 1.0.0
