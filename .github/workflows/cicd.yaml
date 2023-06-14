@@ -3,14 +3,14 @@ on:
   push:
     tags:
       - '*'
-    workflow_dispatch:
-      inputs:
-        tag:
-          description: "What to tag the deployer image with"
-          required: true
-        cnpg_tag:
-          description: "What version of the CNPG chart to bundle"
-          required: true
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "What to tag the deployer image with"
+        required: true
+      cnpg_tag:
+        description: "What version of the CNPG chart to bundle"
+        required: true
 jobs:
   build:
     name: Build chart
