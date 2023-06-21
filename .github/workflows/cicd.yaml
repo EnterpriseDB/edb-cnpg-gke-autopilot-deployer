@@ -32,6 +32,8 @@ jobs:
           password: ${{ secrets.GCR_JSON_KEY }}
       - name: Install Helm
         uses: azure/setup-helm@v3
+        with:
+          version: v3.9.0
         id: install
 
       # Steps to run on tag
@@ -61,7 +63,7 @@ jobs:
           build-args: |
             TAG=${{ steps.semver_parser.outputs.major }}.${{ steps.semver_parser.outputs.minor }}
       - name: Copy CNPG image
-        if: ${{ github.event_name == 'workflow_dispatch' }}
+        if: ${{ github.event_name != 'workflow_dispatch' }}
         run: |
           docker buildx imagetools create \
             --tag gcr.io/public-edb-ppas/edb-cnp-gke-autopilot-dev/cloudnative-pg:latest \
