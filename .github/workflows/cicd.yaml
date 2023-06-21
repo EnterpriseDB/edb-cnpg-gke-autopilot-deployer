@@ -24,38 +24,34 @@ jobs:
         uses: docker/setup-qemu-action@v2
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
-      - name: Authenticate to Google Cloud
-        id: auth
-        uses: google-github-actions/auth@v1.1.1
+      - name: Login to GCR
+        uses: docker/login-action@v2
         with:
-          token_format: 'access_token'
-          credentials_json: '${{ secrets.GCR_JSON_KEY }}'
-      - uses: 'docker/login-action@v1'
-        with:
-          registry:
-          username: 'oauth2accesstoken'
-          password: '${{ steps.auth.outputs.access_token }}'
+          registry: gcr.io
+          username: _json_key
+          password: ${{ secrets.GCR_JSON_KEY }}
       - name: Install Helm
         uses: azure/setup-helm@v3
         with:
-          id: install
+          version: v3.9.0
+        id: install
 
       # Steps to run on tag
       - name: Parse major, minor, patch from tag
         id: semver_parser
         uses: booxmedialtd/ws-action-parse-semver@v1
-        if: ${{ github.ref_type == 'tag' }}
+        if: ${{ github.event_name != 'workflow_dispatch' }}
         with:
           input_string: ${{ github.ref }}
           version_extractor_regex: '^[v]?([0-9]+\.[0-9]+\.[0-9]).*$'
       - name: Update CNPG chart by tag
         run: make update-chart
-        if: ${{ github.ref_type == 'tag' }}
+        if: ${{ github.event_name != 'workflow_dispatch' }}
         env:
           TAG: "${{ steps.semver_parser.outputs.major }}.${{ steps.semver_parser.outputs.minor }}.${{ steps.semver_parser.outputs.patch }}"
       - name: Build and push
         uses: docker/build-push-action@v4
-        if: ${{ github.ref_type == 'tag' }}
+        if: ${{ github.event_name != 'workflow_dispatch' }}
         with:
           context: .
           push: true
@@ -66,6 +62,19 @@ jobs:
             gcr.io/public-edb-ppas/edb-cnp-gke-autopilot-dev/deployer:${{ steps.semver_parser.outputs.major }}.${{ steps.semver_parser.outputs.minor }}.${{ steps.semver_parser.outputs.patch }}
           build-args: |
             TAG=${{ steps.semver_parser.outputs.major }}.${{ steps.semver_parser.outputs.minor }}
+      - name: Pull CNPG image
+        if: ${{ github.event_name != 'workflow_dispatch' }}
+        run: |
+          docker pull ghcr.io/cloudnative-pg/cloudnative-pg:${{ steps.semver_parser.outputs.major }}.${{ steps.semver_parser.outputs.minor }}.${{ steps.semver_parser.outputs.patch }}
+      - name: Copy CNPG image
+        if: ${{ github.event_name != 'workflow_dispatch' }}
+        run: |
+          docker buildx imagetools create \
+            --tag gcr.io/public-edb-ppas/edb-cnp-gke-autopilot-dev/cloudnative-pg:latest \
+            --tag gcr.io/public-edb-ppas/edb-cnp-gke-autopilot-dev/cloudnative-pg:${{ github.ref }} \
+            --tag gcr.io/public-edb-ppas/edb-cnp-gke-autopilot-dev/cloudnative-pg:${{ steps.semver_parser_dispatch.outputs.major }}.${{ steps.semver_parser_dispatch.outputs.minor }} \
+            --tag gcr.io/public-edb-ppas/edb-cnp-gke-autopilot-dev/cloudnative-pg:${{ steps.semver_parser_dispatch.outputs.major }}.${{ steps.semver_parser_dispatch.outputs.minor }}.${{ steps.semver_parser_dispatch.outputs.patch }} \
+           ghcr.io/cloudnative-pg/cloudnative-pg:${{ steps.semver_parser_dispatch.outputs.major }}.${{ steps.semver_parser_dispatch.outputs.minor }}.${{ steps.semver_parser_dispatch.outputs.patch }}
       #####
 
       # Steps to run on dispatch
@@ -94,4 +103,17 @@ jobs:
             gcr.io/public-edb-ppas/edb-cnp-gke-autopilot-dev/deployer:${{ steps.semver_parser_dispatch.outputs.major }}.${{ steps.semver_parser_dispatch.outputs.minor }}.${{ steps.semver_parser_dispatch.outputs.patch }}
           build-args: |
             TAG=${{ steps.semver_parser_dispatch.outputs.major }}.${{ steps.semver_parser_dispatch.outputs.minor }}
+      - name: Pull CNPG image
+        if: ${{ github.event_name == 'workflow_dispatch' }}
+        run: |
+          docker pull ghcr.io/cloudnative-pg/cloudnative-pg:${{ steps.semver_parser_dispatch.outputs.major }}.${{ steps.semver_parser_dispatch.outputs.minor }}.${{ steps.semver_parser_dispatch.outputs.patch }}
+      - name: Copy CNPG image
+        if: ${{ github.event_name == 'workflow_dispatch' }}
+        run: |
+          docker buildx imagetools create \
+            --tag gcr.io/public-edb-ppas/edb-cnp-gke-autopilot-dev/cloudnative-pg:latest \
+            --tag gcr.io/public-edb-ppas/edb-cnp-gke-autopilot-dev/cloudnative-pg:${{ inputs.tag }} \
+            --tag gcr.io/public-edb-ppas/edb-cnp-gke-autopilot-dev/cloudnative-pg:${{ steps.semver_parser_dispatch.outputs.major }}.${{ steps.semver_parser_dispatch.outputs.minor }} \
+            --tag gcr.io/public-edb-ppas/edb-cnp-gke-autopilot-dev/cloudnative-pg:${{ steps.semver_parser_dispatch.outputs.major }}.${{ steps.semver_parser_dispatch.outputs.minor }}.${{ steps.semver_parser_dispatch.outputs.patch }} \
+           ghcr.io/cloudnative-pg/cloudnative-pg:${{ steps.semver_parser_dispatch.outputs.major }}.${{ steps.semver_parser_dispatch.outputs.minor }}.${{ steps.semver_parser_dispatch.outputs.patch }}
       #####
