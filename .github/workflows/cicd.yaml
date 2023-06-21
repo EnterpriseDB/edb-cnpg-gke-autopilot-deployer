@@ -44,18 +44,18 @@ jobs:
       - name: Parse major, minor, patch from tag
         id: semver_parser
         uses: booxmedialtd/ws-action-parse-semver@v1
-        if: ${{ github.ref_type == 'tag' }}
+        if: ${{ github.event_name != 'workflow_dispatch' }}
         with:
           input_string: ${{ github.ref }}
           version_extractor_regex: '^[v]?([0-9]+\.[0-9]+\.[0-9]).*$'
       - name: Update CNPG chart by tag
         run: make update-chart
-        if: ${{ github.ref_type == 'tag' }}
+        if: ${{ github.event_name != 'workflow_dispatch' }}
         env:
           TAG: "${{ steps.semver_parser.outputs.major }}.${{ steps.semver_parser.outputs.minor }}.${{ steps.semver_parser.outputs.patch }}"
       - name: Build and push
         uses: docker/build-push-action@v4
-        if: ${{ github.ref_type == 'tag' }}
+        if: ${{ github.event_name != 'workflow_dispatch' }}
         with:
           context: .
           push: true
