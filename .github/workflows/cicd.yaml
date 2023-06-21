@@ -32,8 +32,7 @@ jobs:
           password: ${{ secrets.GCR_JSON_KEY }}
       - name: Install Helm
         uses: azure/setup-helm@v3
-        with:
-          id: install
+        id: install
 
       # Steps to run on tag
       - name: Parse major, minor, patch from tag
