@@ -64,8 +64,8 @@ jobs:
             gcr.io/public-edb-ppas/edb-cnp-gke-autopilot-dev/deployer:${{ github.ref }}
             gcr.io/public-edb-ppas/edb-cnp-gke-autopilot-dev/deployer:${{ steps.semver_parser.outputs.major }}.${{ steps.semver_parser.outputs.minor }}
             gcr.io/public-edb-ppas/edb-cnp-gke-autopilot-dev/deployer:${{ steps.semver_parser.outputs.major }}.${{ steps.semver_parser.outputs.minor }}.${{ steps.semver_parser.outputs.patch }}
-          build-args:
-            - TAG: "${{ steps.semver_parser.outputs.major }}.${{ steps.semver_parser.outputs.minor }}"
+          build-args: |
+            TAG=${{ steps.semver_parser.outputs.major }}.${{ steps.semver_parser.outputs.minor }}
       #####
 
       # Steps to run on dispatch
@@ -92,6 +92,6 @@ jobs:
             gcr.io/public-edb-ppas/edb-cnp-gke-autopilot-dev/deployer:${{ inputs.tag }}
             gcr.io/public-edb-ppas/edb-cnp-gke-autopilot-dev/deployer:${{ steps.semver_parser.outputs.major }}.${{ steps.semver_parser.outputs.minor }}
             gcr.io/public-edb-ppas/edb-cnp-gke-autopilot-dev/deployer:${{ steps.semver_parser.outputs.major }}.${{ steps.semver_parser.outputs.minor }}.${{ steps.semver_parser.outputs.patch }}
-          build-args:
-            - TAG: "${{ steps.semver_parser.outputs.major }}.${{ steps.semver_parser.outputs.minor }}"
+          build-args: |
+            TAG=${{ steps.semver_parser.outputs.major }}.${{ steps.semver_parser.outputs.minor }}
       #####
