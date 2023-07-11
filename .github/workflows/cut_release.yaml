@@ -1,0 +1,30 @@
+name: cut-release
+on:
+  workflow_dispatch:
+    inputs:
+      commit_or_identifier:
+        description: "What commit or identifier to cut the release with"
+        required: true
+      tag:
+        description: "What to tag the release as (major.minor.patch) Do not include commit hash."
+        required: true
+jobs:
+  build:
+    name: Build chart
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Get SHA for ref
+        id: sha
+        run: echo "sha_short=$(git rev-parse --short ${{ inputs.commit_or_identifier }})" >> $GITHUB_OUTPUT
+      - name: Create tag
+        uses: actions/github-script@v6
+        with:
+          script: |
+            github.rest.git.createRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: 'refs/tags/${{ inputs.tag }}-${{ steps.sha.outputs.sha_short }}',
+              sha: ${{ steps.sha.outputs.sha_short }}
+            })

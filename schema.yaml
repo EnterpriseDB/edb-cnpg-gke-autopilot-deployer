@@ -62,11 +62,6 @@ properties:
     default: cnpg-system
     x-google-marketplace:
       type: NAMESPACE
-  metering.ubbImage.image:
-    type: string
-    default: gcr.io/cloud-marketplace-tools/metering/ubbagent:latest
-    x-google-marketplace:
-      type: STRING
   metering.reportingSecret:
     type: string
     x-google-marketplace:
