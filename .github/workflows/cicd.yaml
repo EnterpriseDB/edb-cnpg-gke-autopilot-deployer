@@ -41,7 +41,7 @@ jobs:
         if: ${{ github.event_name != 'workflow_dispatch' }}
         with:
           input_string: ${{ github.ref }}
-          version_extractor_regex: '^refs/tags/[v]?([0-9]+\.[0-9]+\.[0-9]).*$'
+          version_extractor_regex: '^refs/tags/[v]?(.*)$'
       - name: Update CNPG chart by tag
         run: make update-chart
         if: ${{ github.event_name != 'workflow_dispatch' }}
@@ -55,7 +55,7 @@ jobs:
           push: true
           tags: |
             gcr.io/public-edb-ppas/edb-cnp-gke-autopilot-dev/deployer:latest
-            gcr.io/public-edb-ppas/edb-cnp-gke-autopilot-dev/deployer:${{ github.ref }}
+            gcr.io/public-edb-ppas/edb-cnp-gke-autopilot-dev/deployer:${{ steps.semver_parser.outputs.fullversion }}
             gcr.io/public-edb-ppas/edb-cnp-gke-autopilot-dev/deployer:${{ steps.semver_parser.outputs.major }}.${{ steps.semver_parser.outputs.minor }}
             gcr.io/public-edb-ppas/edb-cnp-gke-autopilot-dev/deployer:${{ steps.semver_parser.outputs.major }}.${{ steps.semver_parser.outputs.minor }}.${{ steps.semver_parser.outputs.patch }}
           build-args: |
