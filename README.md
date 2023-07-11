@@ -13,9 +13,7 @@ For more information, visit the
 
 Get up and running with a few clicks! Install this EDB Community 360 PostgreSQL app to a
 Google Kubernetes Engine cluster using Google Cloud Marketplace. Follow the
-[on-screen instructions](https://console.cloud.google.com/marketplace/details/foo/bar). 
-
-[//]: # (TODO get the right URL)
+[on-screen instructions](https://console.cloud.google.com/marketplace/details/public-edb-ppas/edb-postgresql).
 
 ## Manual installation instructions
 
@@ -48,15 +46,15 @@ This license key is a Google Marketplace License that enables the pay as you go 
 
 See the following screenshot for an example
 
-![Purchase EDB Community 360 PostgreSQL](TODO)
+![Purchase EDB Community 360 PostgreSQL](./resources/purchase.png)
 
-#### Generate a license file for the GCP project for billing
+#### Generate a service account key for the GCP project for billing
 
-Click the “Generate license key” button to generate the license key.  It will automatically be downloaded onto your computer.
+Click the “Download Service Account Key” button to generate the license key.  It will automatically be downloaded onto your computer.
 
-![Get License file for EDB Community 360 PostgreSQL](TODO)
+![Get License file for EDB Community 360 PostgreSQL](./resources/service_key.png)
 
-Save the license key file preferably as `license-key.yaml`.
+Save the servicea account key file preferably as `service-account-key.yaml`.
 
 #### Create a Google Kubernetes Engine (GKE) cluster
 
@@ -82,7 +80,6 @@ Clone this repo and its associated tools repo:
 ```shell
 git clone --recursive https://github.com/EnterpriseDB/edb-cnp-gke-autopilot-deployer.git
 ```
-[//]: # (TODO get the right URL)
 
 #### Install the Application resource definition
 
@@ -121,34 +118,27 @@ export APP_INSTANCE_NAME=edb-gke-cnp-autopilot
 export NAMESPACE=cnpg-system
 ```
 
-#### Prepare and install the license key
+#### Prepare and install the service account key
 
-Ensure that the license key you downloaded earlier is in your current working directly and is named `license.yaml`.
+Ensure that the service account key you downloaded earlier is in your current working directly and is named `service-account-key.yaml`.
 
-Prepare the license key by giving it the specific `metadata.name` below based on the application instance name you 
+Prepare the service account key by giving it the specific `metadata.name` below based on the application instance name you 
 defined earlier.
 
 ```bash
-cat <<EOT >> license.yaml
-metadata:
-  name: "$APP_INSTANCE_NAME-reportingsecret"
-EOT
+sed -i "s/name:.*/name: $APP_INSTANCE_NAME-reportingsecret/" service-account-key.yaml
 ```
 
-Install the license onto the Kubernetes cluster.
+Install the service account key onto the Kubernetes cluster.
 
 ```bash
-kubectl apply -f license.yaml
+kubectl apply -f service-account-key.yaml
 ```
-
-[//]: # (TODO Verify format to fix the above script)
 
 #### Set up the image tag:
 
 It is advised to use stable image reference which you can find on
-[Marketplace Container Registry](https://marketplace.gcr.io/foo/bar).
-
-[//]: # (TODO get the right URL)
+[Marketplace Container Registry](https://marketplace.gcr.io/public-edb-ppas/edb-postgresql).
 
 Example:
 
@@ -166,10 +156,9 @@ export TAG="1.20"
 Configure the container image:
 
 ```shell
-export IMAGE_OPERATOR="marketplace.gcr.io/enterprisedb/cloudnativepg:${TAG}"
-export IMAGE_METERING="marketplace.gcr.io/enterprisedb/cloudnativepg-metering:${TAG}"
+export IMAGE_OPERATOR="marketplace.gcr.io/public-edb-ppas/edb-postgresql/deployer:${TAG}"
+export IMAGE_METERING="marketplace.gcr.io/public-edb-ppas/edb-postgresql/metering:${TAG}"
 ```
-[//]: # (TODO get the right URLS)
 
 #### Create namespace in your Kubernetes cluster
 

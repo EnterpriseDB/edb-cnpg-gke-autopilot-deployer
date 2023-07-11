@@ -15,7 +15,7 @@ metering:
     image: "metering_image_repo:latest"
     pullPolicy: IfNotPresent
   reporting:
-    metricName: "edb_usage_1"
+    metricName: "edb_usage_2"
     serviceName: "edb-postgresql.endpoints.public-edb-ppas.cloud.goog"
     scheme: "http"
     host: "localhost"
@@ -24,6 +24,7 @@ metering:
     status: "/status"
     interval: "1m"
     unit: "1h"
+    type: "double"
   stateConfigMapName: "metering-state"
   ubbImage:
     image: "gcr.io/cloud-marketplace-tools/metering/ubbagent:latest"
