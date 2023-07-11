@@ -6,7 +6,7 @@ on:
         description: "What commit or identifier to cut the release with"
         required: true
       tag:
-        description: "What to tag the release as (major.minor.patch) Do not include commit hash."
+        description: "What to tag the release as (v{major}.{minor}.{patch}) Do not include commit hash."
         required: true
 jobs:
   build:
@@ -17,7 +17,9 @@ jobs:
         uses: actions/checkout@v3
       - name: Get SHA for ref
         id: sha
-        run: echo "sha_short=$(git rev-parse --short ${{ inputs.commit_or_identifier }})" >> $GITHUB_OUTPUT
+        run: |
+          echo "sha_short=$(git rev-parse --short ${{ inputs.commit_or_identifier }})" >> $GITHUB_OUTPUT
+          echo "sha_full=$(git rev-parse ${{ inputs.commit_or_identifier }})" >> $GITHUB_OUTPUT
       - name: Create tag
         uses: actions/github-script@v6
         with:
@@ -26,5 +28,5 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               ref: 'refs/tags/${{ inputs.tag }}-${{ steps.sha.outputs.sha_short }}',
-              sha: '${{ steps.sha.outputs.sha_short }}'
+              sha: '${{ steps.sha.outputs.sha_full }}'
             })
