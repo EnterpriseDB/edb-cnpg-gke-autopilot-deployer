@@ -70,9 +70,9 @@ jobs:
           docker buildx imagetools create \
             --tag gcr.io/public-edb-ppas/edb-cnp-gke-autopilot-dev/cloudnative-pg:latest \
             --tag gcr.io/public-edb-ppas/edb-cnp-gke-autopilot-dev/cloudnative-pg:${{ steps.semver_parser.outputs.fullversion }} \
-            --tag gcr.io/public-edb-ppas/edb-cnp-gke-autopilot-dev/cloudnative-pg:${{ steps.semver_parser_dispatch.outputs.major }}.${{ steps.semver_parser_dispatch.outputs.minor }} \
-            --tag gcr.io/public-edb-ppas/edb-cnp-gke-autopilot-dev/cloudnative-pg:${{ steps.semver_parser_dispatch.outputs.major }}.${{ steps.semver_parser_dispatch.outputs.minor }}.${{ steps.semver_parser_dispatch.outputs.patch }} \
-           ghcr.io/cloudnative-pg/cloudnative-pg:${{ steps.semver_parser_dispatch.outputs.major }}.${{ steps.semver_parser_dispatch.outputs.minor }}.${{ steps.semver_parser_dispatch.outputs.patch }}
+            --tag gcr.io/public-edb-ppas/edb-cnp-gke-autopilot-dev/cloudnative-pg:${{ steps.semver_parser.outputs.major }}.${{ steps.semver_parser.outputs.minor }} \
+            --tag gcr.io/public-edb-ppas/edb-cnp-gke-autopilot-dev/cloudnative-pg:${{ steps.semver_parser.outputs.major }}.${{ steps.semver_parser.outputs.minor }}.${{ steps.semver_parser.outputs.patch }} \
+           ghcr.io/cloudnative-pg/cloudnative-pg:${{ steps.semver_parser.outputs.major }}.${{ steps.semver_parser.outputs.minor }}.${{ steps.semver_parser.outputs.patch }}
       #####
 
       # Steps to run on dispatch
