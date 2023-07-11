@@ -26,5 +26,5 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               ref: 'refs/tags/${{ inputs.tag }}-${{ steps.sha.outputs.sha_short }}',
-              sha: ${{ steps.sha.outputs.sha_short }}
+              sha: '${{ steps.sha.outputs.sha_short }}'
             })
