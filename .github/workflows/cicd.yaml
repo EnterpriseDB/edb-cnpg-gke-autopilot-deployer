@@ -41,7 +41,7 @@ jobs:
         if: ${{ github.event_name != 'workflow_dispatch' }}
         with:
           input_string: ${{ github.ref }}
-          version_extractor_regex: '^[v]?([0-9]+\.[0-9]+\.[0-9]).*$'
+          version_extractor_regex: '^refs/tags/[v]?([0-9]+\.[0-9]+\.[0-9]).*$'
       - name: Update CNPG chart by tag
         run: make update-chart
         if: ${{ github.event_name != 'workflow_dispatch' }}
