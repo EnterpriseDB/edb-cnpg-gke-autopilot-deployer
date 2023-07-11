@@ -59,7 +59,7 @@ jobs:
             gcr.io/public-edb-ppas/edb-cnp-gke-autopilot-dev/deployer:${{ steps.semver_parser.outputs.major }}.${{ steps.semver_parser.outputs.minor }}
             gcr.io/public-edb-ppas/edb-cnp-gke-autopilot-dev/deployer:${{ steps.semver_parser.outputs.major }}.${{ steps.semver_parser.outputs.minor }}.${{ steps.semver_parser.outputs.patch }}
           build-args: |
-            TAG=${{ steps.semver_parser.outputs.major }}.${{ steps.semver_parser.outputs.minor }}
+            TAG=${{ steps.semver_parser.outputs.major }}.${{ steps.semver_parser.outputs.minor }}.${{ steps.semver_parser.outputs.patch }}
       - name: Pull CNPG image
         if: ${{ github.event_name != 'workflow_dispatch' }}
         run: |
@@ -100,7 +100,7 @@ jobs:
             gcr.io/public-edb-ppas/edb-cnp-gke-autopilot-dev/deployer:${{ steps.semver_parser_dispatch.outputs.major }}.${{ steps.semver_parser_dispatch.outputs.minor }}
             gcr.io/public-edb-ppas/edb-cnp-gke-autopilot-dev/deployer:${{ steps.semver_parser_dispatch.outputs.major }}.${{ steps.semver_parser_dispatch.outputs.minor }}.${{ steps.semver_parser_dispatch.outputs.patch }}
           build-args: |
-            TAG=${{ steps.semver_parser_dispatch.outputs.major }}.${{ steps.semver_parser_dispatch.outputs.minor }}
+            TAG=${{ steps.semver_parser_dispatch.outputs.major }}.${{ steps.semver_parser_dispatch.outputs.minor }}.${{ steps.semver_parser.outputs.patch }}
       - name: Pull CNPG image
         if: ${{ github.event_name == 'workflow_dispatch' }}
         run: |
