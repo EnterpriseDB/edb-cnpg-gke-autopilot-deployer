@@ -69,7 +69,7 @@ jobs:
         run: |
           docker buildx imagetools create \
             --tag gcr.io/public-edb-ppas/edb-cnp-gke-autopilot-dev/cloudnative-pg:latest \
-            --tag gcr.io/public-edb-ppas/edb-cnp-gke-autopilot-dev/cloudnative-pg:${{ github.ref }} \
+            --tag gcr.io/public-edb-ppas/edb-cnp-gke-autopilot-dev/cloudnative-pg:${{ steps.semver_parser.outputs.fullversion }} \
             --tag gcr.io/public-edb-ppas/edb-cnp-gke-autopilot-dev/cloudnative-pg:${{ steps.semver_parser_dispatch.outputs.major }}.${{ steps.semver_parser_dispatch.outputs.minor }} \
             --tag gcr.io/public-edb-ppas/edb-cnp-gke-autopilot-dev/cloudnative-pg:${{ steps.semver_parser_dispatch.outputs.major }}.${{ steps.semver_parser_dispatch.outputs.minor }}.${{ steps.semver_parser_dispatch.outputs.patch }} \
            ghcr.io/cloudnative-pg/cloudnative-pg:${{ steps.semver_parser_dispatch.outputs.major }}.${{ steps.semver_parser_dispatch.outputs.minor }}.${{ steps.semver_parser_dispatch.outputs.patch }}
@@ -82,7 +82,7 @@ jobs:
         if: ${{ github.event_name == 'workflow_dispatch' }}
         with:
           input_string: ${{ inputs.tag }}
-          version_extractor_regex: '^[v]?([0-9]+\.[0-9]+\.[0-9]).*$'
+          version_extractor_regex: '^[v]?(.*)$'
       - name: Update CNPG chart by input
         run: make update-chart
         if: ${{ github.event_name == 'workflow_dispatch' }}
@@ -96,7 +96,7 @@ jobs:
           push: true
           tags: |
             gcr.io/public-edb-ppas/edb-cnp-gke-autopilot-dev/deployer:latest
-            gcr.io/public-edb-ppas/edb-cnp-gke-autopilot-dev/deployer:${{ inputs.tag }}
+            gcr.io/public-edb-ppas/edb-cnp-gke-autopilot-dev/deployer:${{ steps.semver_parser_dispatch.outputs.fullversion }}
             gcr.io/public-edb-ppas/edb-cnp-gke-autopilot-dev/deployer:${{ steps.semver_parser_dispatch.outputs.major }}.${{ steps.semver_parser_dispatch.outputs.minor }}
             gcr.io/public-edb-ppas/edb-cnp-gke-autopilot-dev/deployer:${{ steps.semver_parser_dispatch.outputs.major }}.${{ steps.semver_parser_dispatch.outputs.minor }}.${{ steps.semver_parser_dispatch.outputs.patch }}
           build-args: |
@@ -110,7 +110,7 @@ jobs:
         run: |
           docker buildx imagetools create \
             --tag gcr.io/public-edb-ppas/edb-cnp-gke-autopilot-dev/cloudnative-pg:latest \
-            --tag gcr.io/public-edb-ppas/edb-cnp-gke-autopilot-dev/cloudnative-pg:${{ inputs.tag }} \
+            --tag gcr.io/public-edb-ppas/edb-cnp-gke-autopilot-dev/cloudnative-pg:${{ steps.semver_parser_dispatch.outputs.fullversion }} \
             --tag gcr.io/public-edb-ppas/edb-cnp-gke-autopilot-dev/cloudnative-pg:${{ steps.semver_parser_dispatch.outputs.major }}.${{ steps.semver_parser_dispatch.outputs.minor }} \
             --tag gcr.io/public-edb-ppas/edb-cnp-gke-autopilot-dev/cloudnative-pg:${{ steps.semver_parser_dispatch.outputs.major }}.${{ steps.semver_parser_dispatch.outputs.minor }}.${{ steps.semver_parser_dispatch.outputs.patch }} \
            ghcr.io/cloudnative-pg/cloudnative-pg:${{ steps.semver_parser_dispatch.outputs.major }}.${{ steps.semver_parser_dispatch.outputs.minor }}.${{ steps.semver_parser_dispatch.outputs.patch }}
