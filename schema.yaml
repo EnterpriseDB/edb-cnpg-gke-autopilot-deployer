@@ -91,6 +91,12 @@ properties:
               - apiGroups:
                   - ""
                 resources:
+                  - nodes
+                verbs:
+                  - get
+              - apiGroups:
+                  - ""
+                resources:
                   - configmaps
                 verbs:
                   - get
