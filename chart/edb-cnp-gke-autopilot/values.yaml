@@ -1,6 +1,6 @@
 cloudnative-pg:
   podLabels:
-    app: edb-cnp-gke-autopilot
+    app: edb-cnpg-gke-autopilot
   serviceAccount:
     create: false
   rbac:
@@ -31,7 +31,7 @@ metering:
     pullPolicy: IfNotPresent
   reportingSecret: ""
   labels:
-    app: edb-cnp-gke-autopilot-metering
+    app: edb-cnpg-gke-autopilot-metering
   secretName: ""
   serviceAccountName: ""
   podSecurityContext:
