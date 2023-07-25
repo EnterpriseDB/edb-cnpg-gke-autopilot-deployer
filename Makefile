@@ -1,5 +1,5 @@
-APP_NAME := edb-cnp-gke-autopilot
-APP_NAME_DEV := edb-cnp-gke-autopilot-dev
+APP_NAME := edb-cnpg-gke-autopilot
+APP_NAME_DEV := edb-cnpg-gke-autopilot-dev
 REGISTRY := gcr.io/public-edb-ppas
 TAG ?= 1.20.0
 DOCKER_BUILDKIT := 1
@@ -66,19 +66,19 @@ cnpg-push-prod: ## Push the cnpg image to the production project
 .PHONY: update-chart
 update-chart: ## Update the CNPG dependency chart
 	helm repo add cnpg https://cloudnative-pg.github.io/charts
-	helm dependency build chart/edb-cnp-gke-autopilot
+	helm dependency build chart/edb-cnpg-gke-autopilot
 
 .PHONY: install
 install: ## Install the deployer image via mpdev
 	mpdev install \
 		--deployer=${REGISTRY}/${APP_NAME_DEV}/deployer:${TAG} \
-		--parameters='{"name": "edb-cnp-gke-autopilot-test","namespace": "cnpg-system","metering.reportingSecret": "fake-reporting-secret"}'
+		--parameters='{"name": "edb-cnpg-gke-autopilot-test","namespace": "cnpg-system","metering.reportingSecret": "fake-reporting-secret"}'
 
 .PHONY: install-prod
 install-prod: ## Install the deployer image via mpdev
 	mpdev install \
 		--deployer=${REGISTRY}/${APP_NAME}/deployer:${TAG}  \
-		--parameters='{"name": "edb-cnp-gke-autopilot-test","namespace": "cnpg-system","metering.reportingSecret": "fake-reporting-secret"}'
+		--parameters='{"name": "edb-cnpg-gke-autopilot-test","namespace": "cnpg-system","metering.reportingSecret": "fake-reporting-secret"}'
 
 .PHONY: verify-install
 verify-install: ## Run the Marketplace verifier

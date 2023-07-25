@@ -78,7 +78,7 @@ gcloud container clusters get-credentials "${CLUSTER}" --zone "${ZONE}"
 Clone this repo and its associated tools repo:
 
 ```shell
-git clone --recursive https://github.com/EnterpriseDB/edb-cnp-gke-autopilot-deployer.git
+git clone --recursive https://github.com/EnterpriseDB/edb-cnpg-gke-autopilot-deployer.git
 ```
 
 #### Install the Application resource definition
@@ -103,7 +103,7 @@ The source code can be found on [github.com/kubernetes-sigs/application](https:/
 Navigate to the `edb-cnp-gke-autopilot-deployer` directory:
 
 ```shell
-cd edb-cnp-gke-autopilot-deployer
+cd edb-cnpg-gke-autopilot-deployer
 ```
 
 #### Configure the app with environment variables
@@ -209,7 +209,7 @@ Use `helm template` to expand the template. We recommend that you save the
 expanded manifest file for future updates to the app.
 
 ```shell
-helm template "${APP_INSTANCE_NAME}" chart/edb-cnp-gke-autopilot\
+helm template "${APP_INSTANCE_NAME}" chart/edb-cnpg-gke-autopilot\
   --namespace "${NAMESPACE}" \
   --set cloudnative-pg.image.repository="${IMAGE_OPERATOR}" \
   --set cloudnative-pg.image.tag="${TAG}" \
