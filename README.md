@@ -100,7 +100,7 @@ The source code can be found on [github.com/kubernetes-sigs/application](https:/
 
 ### Install the app
 
-Navigate to the `edb-cnp-gke-autopilot-deployer` directory:
+Navigate to the `edb-cnpg-gke-autopilot-deployer` directory:
 
 ```shell
 cd edb-cnpg-gke-autopilot-deployer
@@ -114,7 +114,7 @@ for the app. By convention, EDB Community 360 PostgreSQL uses the `cnpg-system` 
 `default` namespace.
 
 ```shell
-export APP_INSTANCE_NAME=edb-gke-cnp-autopilot
+export APP_INSTANCE_NAME=edb-gke-cnpg-autopilot
 export NAMESPACE=cnpg-system
 ```
 
