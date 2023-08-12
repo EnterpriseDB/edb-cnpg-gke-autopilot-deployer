@@ -153,10 +153,10 @@ Alternatively you can use short tag which points to the latest image for selecte
 export TAG="1.20"
 ```
 
-Configure the container image:
+Configure the container image. Note that `IMAGE_OPERATOR` does not include the TAG in the variable.
 
 ```shell
-export IMAGE_OPERATOR="marketplace.gcr.io/public-edb-ppas/edb-postgresql/deployer:${TAG}"
+export IMAGE_OPERATOR="marketplace.gcr.io/public-edb-ppas/edb-postgresql/deployer"
 export IMAGE_METERING="marketplace.gcr.io/public-edb-ppas/edb-postgresql/metering:${TAG}"
 ```
 
