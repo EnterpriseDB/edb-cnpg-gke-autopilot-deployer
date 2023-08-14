@@ -132,7 +132,7 @@ sed -i "s/name:.*/name: $APP_INSTANCE_NAME-reportingsecret/" service-account-key
 Install the service account key onto the Kubernetes cluster.
 
 ```bash
-kubectl apply -f service-account-key.yaml
+kubectl apply -n $NAMESPACE -f service-account-key.yaml
 ```
 
 #### Set up the image tag:
