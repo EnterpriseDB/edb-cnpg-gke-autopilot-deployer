@@ -118,6 +118,14 @@ export APP_INSTANCE_NAME=edb-gke-cnpg-autopilot
 export NAMESPACE=cnpg-system
 ```
 
+#### Create namespace in your Kubernetes cluster
+
+If you use a different namespace than the `default`, run the command below to create a new namespace:
+
+```shell
+kubectl create namespace "${NAMESPACE}"
+```
+
 #### Prepare and install the service account key
 
 Ensure that the service account key you downloaded earlier is in your current working directly and is named `service-account-key.yaml`.
@@ -158,14 +166,6 @@ Configure the container image. Note that `IMAGE_OPERATOR` does not include the T
 ```shell
 export IMAGE_OPERATOR="marketplace.gcr.io/public-edb-ppas/edb-postgresql/cloudnative-pg"
 export IMAGE_METERING="marketplace.gcr.io/public-edb-ppas/edb-postgresql/metering:${TAG}"
-```
-
-#### Create namespace in your Kubernetes cluster
-
-If you use a different namespace than the `default`, run the command below to create a new namespace:
-
-```shell
-kubectl create namespace "${NAMESPACE}"
 ```
 
 ##### Create dedicated Service Accounts
