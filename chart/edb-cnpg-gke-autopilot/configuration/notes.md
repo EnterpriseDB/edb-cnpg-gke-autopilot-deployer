@@ -1,9 +1,9 @@
 ### Selected
-[Connecting psql to the Postgres database](https://cloudnative-pg.io/documentation/current/cnpg-plugin/#launching-psql)
+[Installing and using the cnpg plugin to manage the Postgres deployment](https://cloudnative-pg.io/documentation/current/kubectl-plugin/)
+
+[Connecting psql to the Postgres database](https://cloudnative-pg.io/documentation/current/kubectl-plugin/#launching-psql)
 
 [How to connect applications to your Postgres deployment](https://cloudnative-pg.io/documentation/current/applications/)
-
-[Installing and using the cnpg plugin to manage the Postgres deployment](https://cloudnative-pg.io/documentation/current/cnpg-plugin/)
 
 [How to import data into your Postgres databases](https://cloudnative-pg.io/documentation/current/database_import/)
 
