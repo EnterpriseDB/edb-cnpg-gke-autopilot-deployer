@@ -106,6 +106,10 @@ spec:
           volumeMounts:
             - name: ubbagent-config
               mountPath: /etc/ubbagent
+      {{- with .Values.metering.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       volumes:
         - name: ubbagent-config
           configMap:

@@ -31,13 +31,14 @@ your environment by default.
 - [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
 - [helm](https://helm.sh/)
 - [envsubst](https://command-not-found.com/envsubst)
+- [yq](https://mikefarah.gitbook.io/yq/)
 
 Configure `gcloud` as a Docker credential helper:
 
 ```shell
+gcloud auth login
 gcloud auth configure-docker
 ```
-
 
 ### Obtain license key from Google Cloud Marketplace
 This license key is a Google Marketplace License that enables the pay as you go billing integration into your account.
@@ -75,11 +76,69 @@ gcloud container clusters get-credentials "${CLUSTER}" --zone "${ZONE}"
 
 #### Clone this repo
 
-Clone this repo and its associated tools repo:
+Clone this repo and the one containing the metering app:
 
 ```shell
-git clone --recursive https://github.com/EnterpriseDB/edb-cnpg-gke-autopilot-deployer.git
+git clone https://github.com/EnterpriseDB/edb-cnpg-gke-autopilot-deployer.git
+git clone https://github.com/EnterpriseDB/edb-cnpg-gke-autopilot-metering.git
 ```
+
+### Automated Deploy
+
+First, make sure that you've:
+1. installed the [required tools](#set-up-command-line-tools)
+2. created and configured a [GKE Cluster](#create-a-google-kubernetes-engine-gke-cluster)
+
+The script, when no ENV vars are specified, will default to the following image tags:
+
+* for the `controller image` it will deploy the latest tag available.
+* for the `metering image` it will try to use a metering image which has the same tag as
+  the controller, assuming that it's available.
+
+```shell
+make deploy
+```
+
+#### Use a dev metering image
+
+First, let's build and push the metering image:
+
+```shell
+cd edb-cnpg-gke-autopilot-metering
+git checkout -b dev/cnpg-1234
+# Dev changes here
+make build push
+# This will build and push:
+# > gcr.io/public-edb-ppas/edb-cnpg-gke-autopilot-dev/metering:dev-cnp-1234
+```
+
+Then, let's deploy using the newly built image:
+
+```shell
+cd edb-cnpg-gke-autopilot-deployer
+IMAGE_METERING=gcr.io/public-edb-ppas/edb-cnpg-gke-autopilot-dev/metering:dev-cnp-1234 make deploy
+```
+
+#### Configure a reporting secret
+
+If the `SERVICE_ACCOUNT_KEY_PATH` env is undefined the chart will deploy a fake reporting
+secret, meaning that the metering agent will not be able to relay the usage metrics to Google.
+
+You can retrieve a reporting secret by following [this example](#generate-a-service-account-key-for-the-gcp-project-for-billing).
+
+To configure a reporting secret:
+
+```shell
+cd edb-cnpg-gke-autopilot-deployer
+SERVICE_ACCOUNT_KEY_PATH=/dir/service-account-key.yaml make deploy
+```
+
+### Manual steps
+
+NOTE: The deployment script explained above automates all the steps listed in this section.
+As such, it's advised to use the deployment script unless there's a valid reason not to do so.
+In case of need, below you'll find all the steps needed to perform a manual build & deploy of all
+the components involved.
 
 #### Install the Application resource definition
 
@@ -98,7 +157,7 @@ The Application resource is defined by the
 [Kubernetes SIG-apps](https://github.com/kubernetes/community/tree/master/sig-apps) community.
 The source code can be found on [github.com/kubernetes-sigs/application](https://github.com/kubernetes-sigs/application).
 
-### Install the app
+#### Install the app
 
 Navigate to the `edb-cnpg-gke-autopilot-deployer` directory:
 
