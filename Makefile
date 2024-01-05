@@ -84,3 +84,7 @@ install-prod: ## Install the deployer image via mpdev
 verify-install: ## Run the Marketplace verifier
 	mpdev /scripts/verify \
 		  --deployer=${REGISTRY}/${APP_NAME_DEV}/deployer:${TAG}
+
+.PHONY: deploy
+deploy: ## Deploy controller and metering in the configured Kubernetes cluster in ~/.kube/config.
+	hack/deploy.sh

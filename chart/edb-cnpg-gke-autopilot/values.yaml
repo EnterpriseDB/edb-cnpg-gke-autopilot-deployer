@@ -11,6 +11,7 @@ cloudnative-pg:
     readinessProbe:
       initialDelaySeconds: 30
 metering:
+  imagePullSecrets: []
   image:
     image: "metering_image_repo:latest"
     pullPolicy: IfNotPresent
