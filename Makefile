@@ -1,13 +1,14 @@
 APP_NAME := edb-cnpg-gke-autopilot
 APP_NAME_DEV := edb-cnpg-gke-autopilot-dev
 REGISTRY := gcr.io/public-edb-ppas
-TAG ?= 1.21.1
+TAG ?= 1.22.0
 DOCKER_BUILDKIT := 1
 
 export REGISTRY
 export APP_NAME
 export APP_NAME_DEV
 export DOCKER_BUILDKIT
+export TAG
 
 # Setting SHELL to bash allows bash commands to be executed by recipes.
 # This is a requirement for 'setup-envtest.sh' in the test target.
