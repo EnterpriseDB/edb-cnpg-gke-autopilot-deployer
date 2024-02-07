@@ -1,7 +1,7 @@
 APP_NAME := edb-cnpg-gke-autopilot
 APP_NAME_DEV := edb-cnpg-gke-autopilot-dev
 REGISTRY := gcr.io/public-edb-ppas
-TAG ?= 1.22.0
+TAG ?= 1.22.1
 DOCKER_BUILDKIT := 1
 
 export REGISTRY
