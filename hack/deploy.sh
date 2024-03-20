@@ -97,7 +97,7 @@ deploy_manifest() {
     --set metering.imagePullSecrets[0].name=registry-pullsecret \
     > "${ROOT_DIR}/${MANIFEST}"
 
-  kubectl apply -f "${ROOT_DIR}/${MANIFEST}" --namespace "${NAMESPACE}"
+  kubectl apply --server-side -f "${ROOT_DIR}/${MANIFEST}" --namespace "${NAMESPACE}"
 }
 
 kubectl apply -f "https://raw.githubusercontent.com/GoogleCloudPlatform/marketplace-k8s-app-tools/master/crd/app-crd.yaml"
