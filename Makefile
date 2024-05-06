@@ -1,7 +1,7 @@
 APP_NAME := edb-cnpg-gke-autopilot
 APP_NAME_DEV := edb-cnpg-gke-autopilot-dev
 REGISTRY := gcr.io/public-edb-ppas
-TAG ?= 1.22.2
+TAG ?= 1.23.1
 DOCKER_BUILDKIT := 1
 
 export REGISTRY
@@ -66,6 +66,11 @@ cnpg-push-prod: ## Push the cnpg image to the production project
 
 .PHONY: update-chart
 update-chart: ## Update the CNPG dependency chart
+	helm repo add cnpg https://cloudnative-pg.github.io/charts
+	helm dependency update chart/edb-cnpg-gke-autopilot
+
+.PHONY: rebuild-chart
+rebuild-chart: ## Rebuild the CNPG dependency chart
 	helm repo add cnpg https://cloudnative-pg.github.io/charts
 	helm dependency build chart/edb-cnpg-gke-autopilot
 
