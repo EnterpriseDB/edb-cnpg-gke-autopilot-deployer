@@ -11,7 +11,7 @@ ROOT_DIR=$(cd "$(dirname "$0")/.."; pwd)
 SERVICE_ACCOUNT_KEY_PATH=${SERVICE_ACCOUNT_KEY_PATH:=""}
 
 # Registry Vars
-REGISTRY=${REGISTRY:-"gcr.io/public-edb-ppas/edb-cnpg-gke-autopilot-dev"}
+REGISTRY=${REGISTRY:-"gcr.io/public-edb-ppas"}
 REGISTRY_DOMAIN=$(echo $REGISTRY | cut -d/ -f1)
 SUPPORTED_DOMAINS=("asia.gcr.io" "eu.gcr.io" "gcr.io" "marketplace.gcr.io" "staging-k8s.gcr.io" "us.gcr.io")
 REGISTRY_USERNAME=${REGISTRY_USERNAME:-""}
@@ -21,7 +21,8 @@ REGISTRY_PASSWORD=${REGISTRY_PASSWORD:-""}
 REPO_TAG=${TAG:-$(git describe --tags --abbrev=0 | cut -d- -f1)}
 TAG=${REPO_TAG#v}
 IMAGE_OPERATOR="ghcr.io/cloudnative-pg/cloudnative-pg"
-IMAGE_METERING=${IMAGE_METERING:-"${REGISTRY}/metering:${TAG}"}
+IMAGE_BASE="${REGISTRY}/edb-cnpg-gke-autopilot-dev"
+IMAGE_METERING=${IMAGE_METERING:-"${IMAGE_BASE}/metering:${TAG}"}
 
 # Cluster Vars
 NAMESPACE=cnpg-system
