@@ -361,6 +361,14 @@ properties:
           - apiGroups:
               - postgresql.cnpg.io
             resources:
+              - clusterimagecatalogs
+            verbs:
+              - get
+              - list
+              - watch
+          - apiGroups:
+              - postgresql.cnpg.io
+            resources:
               - clusters
             verbs:
               - create
@@ -384,6 +392,14 @@ properties:
               - get
               - patch
               - update
+              - watch
+          - apiGroups:
+              - postgresql.cnpg.io
+            resources:
+              - imagecatalogs
+            verbs:
+              - get
+              - list
               - watch
           - apiGroups:
               - postgresql.cnpg.io
@@ -453,6 +469,16 @@ properties:
               - list
               - patch
               - update
+              - watch
+          - apiGroups:
+              - snapshot.storage.k8s.io
+            resources:
+              - volumesnapshots
+            verbs:
+              - create
+              - get
+              - list
+              - patch
               - watch
 
 required:
