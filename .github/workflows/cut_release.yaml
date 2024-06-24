@@ -21,7 +21,7 @@ jobs:
           echo "sha_short=$(git rev-parse --short ${{ inputs.commit_or_identifier }})" >> $GITHUB_OUTPUT
           echo "sha_full=$(git rev-parse ${{ inputs.commit_or_identifier }})" >> $GITHUB_OUTPUT
       - name: Create tag
-        uses: actions/github-script@v6
+        uses: actions/github-script@v7
         with:
           script: |
             github.rest.git.createRef({
